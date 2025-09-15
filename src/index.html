@@ -1,0 +1,30 @@
+<script>
+    const streamlitDoc = window.parent.document;
+
+    buttons = Array.from(streamlitDoc.querySelectorAll(".stButton > button"));
+    console.log(buttons);
+
+    const leftButton = buttons.find((btn) => btn.innerText.includes("Desechar"));
+    const rightButton = buttons.find((btn) => btn.innerText.includes("Mantener"));
+    const undoButton = buttons.find((btn) => btn.innerText.includes("Deshacer"));
+
+    leftButton.style.backgroundColor = "lightcoral";
+    rightButton.style.backgroundColor = "darkseagreen";
+
+
+    streamlitDoc.addEventListener("keydown", function(event) {
+        switch (event.key) {
+            case "ArrowLeft":
+                leftButton.click();
+                break;
+            case "ArrowRight":
+                rightButton.click();
+                break;
+            case "z":
+                if (event.ctrlKey || event.metaKey) {
+                    undoButton.click();
+                }
+                break;
+        }
+    });
+</script>
