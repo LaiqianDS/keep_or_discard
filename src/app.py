@@ -24,6 +24,12 @@ DEFAULT_DATA_DIR = Path("./media").resolve()
 KEEP_DIR = Path("./keep").resolve()
 DISCARD_DIR = Path("./discard").resolve()
 
+if not KEEP_DIR.exists():
+    KEEP_DIR.mkdir(parents=True)
+
+if not DISCARD_DIR.exists():
+    DISCARD_DIR.mkdir(parents=True)
+
 
 def main():
     st.set_page_config(page_title="Clasificador de Fotos", layout="wide")
