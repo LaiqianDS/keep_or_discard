@@ -185,24 +185,32 @@ def move_files(raw_type: str = "rw2") -> None:
 
     for file in st.session_state.mantener:
         src = Path("media") / f"{file}.jpg"
+        src2 = Path("media") / f"{file}.png"
+        src3 = Path("media") / f"{file}.jpeg"
         raw = Path("media") / f"{file}.{raw_type}"
         dst = keep_path / f"{file}.jpg"
         raw_dst = keep_path / f"{file}.{raw_type}"
-        if src.exists():
-            dst.parent.mkdir(parents=True, exist_ok=True)
-            shutil.move(str(src), str(dst))
+        srcs = [src, src2, src3]
+        for src in srcs:
+            if src.exists():
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                shutil.move(str(src), str(dst))
         if raw.exists():
             raw_dst.parent.mkdir(parents=True, exist_ok=True)
             shutil.move(str(raw), str(raw_dst))
 
     for file in st.session_state.desechar:
         src = Path("media") / f"{file}.jpg"
+        src2 = Path("media") / f"{file}.png"
+        src3 = Path("media") / f"{file}.jpeg"
         dst = discard_path / f"{file}.jpg"
         raw = Path("media") / f"{file}.{raw_type}"
         raw_dst = discard_path / f"{file}.{raw_type}"
-        if src.exists():
-            dst.parent.mkdir(parents=True, exist_ok=True)
-            shutil.move(str(src), str(dst))
+        srcs = [src, src2, src3]
+        for src in srcs:
+            if src.exists():
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                shutil.move(str(src), str(dst))
         if raw.exists():
             raw_dst.parent.mkdir(parents=True, exist_ok=True)
             shutil.move(str(raw), str(raw_dst))
