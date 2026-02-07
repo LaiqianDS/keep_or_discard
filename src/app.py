@@ -404,53 +404,37 @@ def apply_action() -> None:
     keep_path.mkdir(parents=True, exist_ok=True)
     discard_path.mkdir(parents=True, exist_ok=True)
 
-    if st.session_state.dry_run:
-        st.info("Modo simulación activo: no se copiarán ni moverán archivos.")
-        return
+    for file in st.session_state.mantener:
+        src = Path("media") / f"{file}.jpg"
+        src2 = Path("media") / f"{file}.png"
+        src3 = Path("media") / f"{file}.jpeg"
+        raw = Path("media") / f"{file}.{raw_type}"
+        dst = keep_path / f"{file}.jpg"
+        raw_dst = keep_path / f"{file}.{raw_type}"
+        srcs = [src, src2, src3]
+        for src in srcs:
+            if src.exists():
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                shutil.move(str(src), str(dst))
+        if raw.exists():
+            raw_dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.move(str(raw), str(raw_dst))
 
-    plan, _ = build_transfer_plan()
-    if not plan:
-        st.info("No hay archivos para procesar.")
-        return
-
-    mode = st.session_state.mode
-    moved_sources = []
-    for src, dst in plan:
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        if mode == "move":
-            shutil.move(str(src), str(dst))
-        else:
-            shutil.copy2(str(src), str(dst))
-        moved_sources.append(str(src))
-
-    st.session_state.last_action = {
-        "mode": mode,
-        "timestamp": datetime.now().isoformat(timespec="seconds"),
-        "sources": moved_sources,
-    }
-    st.success("Acción completada.")
-
-
-def cleanup_originals() -> None:
-    if not st.session_state.confirm_cleanup:
-        st.warning("Confirma la casilla antes de limpiar originales.")
-        return
-    last = st.session_state.last_action
-    if not last or last.get("mode") != "copy":
-        st.info("No hay una copia reciente para limpiar.")
-        return
-
-    originals_dir = Path("discard") / "_originals"
-    originals_dir.mkdir(parents=True, exist_ok=True)
-
-    for src_str in last.get("sources", []):
-        src = Path(src_str)
-        if not src.exists():
-            continue
-        dst = unique_destination(originals_dir / src.name)
-        shutil.move(str(src), str(dst))
-
-    st.success("Originales movidos a discard/_originals.")
+    for file in st.session_state.desechar:
+        src = Path("media") / f"{file}.jpg"
+        src2 = Path("media") / f"{file}.png"
+        src3 = Path("media") / f"{file}.jpeg"
+        dst = discard_path / f"{file}.jpg"
+        raw = Path("media") / f"{file}.{raw_type}"
+        raw_dst = discard_path / f"{file}.{raw_type}"
+        srcs = [src, src2, src3]
+        for src in srcs:
+            if src.exists():
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                shutil.move(str(src), str(dst))
+        if raw.exists():
+            raw_dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.move(str(raw), str(raw_dst))
 
 # ---------------------------- UI ----------------------------
 st.title("Keep or Discard")
