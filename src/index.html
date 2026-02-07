@@ -12,18 +12,34 @@
     rightButton.style.backgroundColor = "darkseagreen";
 
 
+    const isTyping = () => {
+        const tag = document.activeElement?.tagName?.toLowerCase();
+        return tag === "input" || tag === "textarea" || document.activeElement?.isContentEditable;
+    };
+
     streamlitDoc.addEventListener("keydown", function(event) {
+        if (isTyping()) {
+            return;
+        }
         switch (event.key) {
             case "ArrowLeft":
+            case "a":
+            case "A":
                 leftButton.click();
                 break;
             case "ArrowRight":
+            case "d":
+            case "D":
+            case " ":
                 rightButton.click();
                 break;
             case "z":
-                if (event.ctrlKey || event.metaKey) {
-                    undoButton.click();
-                }
+            case "Z":
+                undoButton.click();
+                break;
+            case "u":
+            case "U":
+                undoButton.click();
                 break;
         }
     });
